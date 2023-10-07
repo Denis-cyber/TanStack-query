@@ -1,24 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
-import { ITodo } from "./app.interface";
-
-const todoId = 1;
+import { useTodos } from "./hooks/useTodos";
 
 function App() {
-  const { isLoading, data } = useQuery(
-    ["todos", todoId],
-    () => axios.get<ITodo>("https://jsonplaceholder.typicode.com/todos/1"),
-    { select: ({ data }) => data }
-  );
+  const { isLoading, data } = useTodos();
 
   return (
     <>
       {isLoading && <div>Loading...</div>}
 
-      {data ? <h1>Todo: {data.title}</h1> : <h1>Data not found</h1>}
+      {data?.length ? (
+        data.map((todo) => (
+          <div key={todo.id}>
+            <b>{todo.id}</b>
+            {todo.title}
+          </div>
+        ))
+      ) : (
+        <h1>Data not found</h1>
+      )}
     </>
   );
 }
 
-export default App;
+export { App };
